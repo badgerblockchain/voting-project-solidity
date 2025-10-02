@@ -18,25 +18,11 @@ contract Vote {
     mapping(address => uint256) public candidateIndex;
     mapping(address => Voter) public voterChoice;
 
-    function addCandidate(
-        string memory name,
-        string memory description
-    ) external {
+    function addCandidate(string memory name, string memory description) external {
         if (candidates.length > 0) {
-            require(
-                candidates[candidateIndex[msg.sender]].walletAddress !=
-                    msg.sender,
-                "Candidate already exists"
-            );
+            require(candidates[candidateIndex[msg.sender]].walletAddress != msg.sender, "Candidate already exists");
         }
-        candidates.push(
-            Candidate({
-                walletAddress: msg.sender,
-                name: name,
-                voteCount: 0,
-                description: description
-            })
-        );
+        candidates.push(Candidate({walletAddress: msg.sender, name: name, voteCount: 0, description: description}));
         candidateIndex[msg.sender] = candidates.length - 1;
     }
 
@@ -62,10 +48,7 @@ contract Vote {
 
         uint256 idx = candidateIndex[candidate];
 
-        voterChoice[msg.sender] = Voter({
-            hasVoted: true,
-            votedFor: candidates[idx]
-        });
+        voterChoice[msg.sender] = Voter({hasVoted: true, votedFor: candidates[idx]});
 
         candidates[idx].voteCount += 1;
     }
@@ -74,9 +57,7 @@ contract Vote {
         return candidates[candidateIndex[candidate]].voteCount;
     }
 
-    function getVoterChoice(
-        address voter
-    ) external view returns (Candidate memory) {
+    function getVoterChoice(address voter) external view returns (Candidate memory) {
         return voterChoice[voter].votedFor;
     }
 
