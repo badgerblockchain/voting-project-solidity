@@ -2,7 +2,6 @@
 pragma solidity ^0.8.26;
 
 contract Vote {
-    
     struct Candidate {
         address walletAddress;
         string name;
@@ -19,31 +18,43 @@ contract Vote {
     mapping(address => uint) public candidateIndex;
     mapping(address => Voter) public voterChoice;
 
-    function addCandidate(string memory name, string memory description) external {
+    function addCandidate(
+        string memory name,
+        string memory description
+    ) external {
         if (candidates.length > 0) {
             require(
-                candidates[candidateIndex[msg.sender]].walletAddress != msg.sender,
+                candidates[candidateIndex[msg.sender]].walletAddress !=
+                    msg.sender,
                 "Candidate already exists"
             );
         }
-        candidates.push(Candidate({
-            walletAddress: msg.sender,
-            name: name,
-            voteCount: 0,
-            description: description
-        }));
+        candidates.push(
+            Candidate({
+                walletAddress: msg.sender,
+                name: name,
+                voteCount: 0,
+                description: description
+            })
+        );
         candidateIndex[msg.sender] = candidates.length - 1;
     }
 
     function changeName(string memory newName) external {
         uint idx = candidateIndex[msg.sender];
-        require(candidates[idx].walletAddress == msg.sender, "Candidate not found");
+        require(
+            candidates[idx].walletAddress == msg.sender,
+            "Candidate not found"
+        );
         candidates[idx].name = newName;
     }
 
     function changeDescription(string memory newDescription) external {
         uint idx = candidateIndex[msg.sender];
-        require(candidates[idx].walletAddress == msg.sender, "Candidate not found");
+        require(
+            candidates[idx].walletAddress == msg.sender,
+            "Candidate not found"
+        );
         candidates[idx].description = newDescription;
     }
 
@@ -69,7 +80,9 @@ contract Vote {
         return candidates[candidateIndex[candidate]].voteCount;
     }
 
-    function getVoterChoice(address voter) external view returns (Candidate memory) {
+    function getVoterChoice(
+        address voter
+    ) external view returns (Candidate memory) {
         return voterChoice[voter].votedFor;
     }
 
