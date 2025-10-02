@@ -2,11 +2,10 @@
 pragma solidity ^0.8.26;
 
 contract Vote {
-    
     struct Candidate {
         address walletAddress;
         string name;
-        uint voteCount;
+        uint256 voteCount;
         string description;
     }
 
@@ -16,7 +15,7 @@ contract Vote {
     }
 
     Candidate[] public candidates;
-    mapping(address => uint) public candidateIndex;
+    mapping(address => uint256) public candidateIndex;
     mapping(address => Voter) public voterChoice;
 
     function addCandidate(string memory name, string memory description) external {
@@ -36,13 +35,13 @@ contract Vote {
     }
 
     function changeName(string memory newName) external {
-        uint idx = candidateIndex[msg.sender];
+        uint256 idx = candidateIndex[msg.sender];
         require(candidates[idx].walletAddress == msg.sender, "Candidate not found");
         candidates[idx].name = newName;
     }
 
     function changeDescription(string memory newDescription) external {
-        uint idx = candidateIndex[msg.sender];
+        uint256 idx = candidateIndex[msg.sender];
         require(candidates[idx].walletAddress == msg.sender, "Candidate not found");
         candidates[idx].description = newDescription;
     }
@@ -55,7 +54,7 @@ contract Vote {
         require(!voterChoice[msg.sender].hasVoted, "Already voted");
         require(candidate != msg.sender, "Can't vote for yourself");
 
-        uint idx = candidateIndex[candidate];
+        uint256 idx = candidateIndex[candidate];
 
         voterChoice[msg.sender] = Voter({
             hasVoted: true,
@@ -65,7 +64,7 @@ contract Vote {
         candidates[idx].voteCount += 1;
     }
 
-    function getVoteCount(address candidate) external view returns (uint) {
+    function getVoteCount(address candidate) external view returns (uint256) {
         return candidates[candidateIndex[candidate]].voteCount;
     }
 
@@ -77,7 +76,7 @@ contract Vote {
         require(candidates.length > 0, "No candidates available");
 
         Candidate memory topCandidate = candidates[0];
-        for (uint i = 1; i < candidates.length; i++) {
+        for (uint256 i = 1; i < candidates.length; i++) {
             if (candidates[i].voteCount > topCandidate.voteCount) {
                 topCandidate = candidates[i];
             }
