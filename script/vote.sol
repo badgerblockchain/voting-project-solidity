@@ -2,6 +2,7 @@
 pragma solidity ^0.8.26;
 
 contract Vote {
+    
     struct Candidate {
         address walletAddress;
         string name;
